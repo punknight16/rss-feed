@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+	<main>
+
+	</main>
+<script>
+//DOESNT WORK NORMALLY BECAUSE OF CORS//
+var websiteUrl ='http://localhost:3000/blog/';
+fetch(websiteUrl).then((res) => {
+  res.text().then((htmlTxt) => {
+  	console.log('htmlTxt: ', htmlTxt);
+    var domParser = new DOMParser()
+    let doc = domParser.parseFromString(htmlTxt, 'text/html')
+    var feedUrl = doc.querySelector('link[type="application/rss+xml"]').href;
+    console.log("feedUrl");
+  })
+}).catch(() => console.error('Error in fetching the website'))
+</script>
+<script>
+var feedUrl = "http://localhost:3000/feed/";
+fetch(feedUrl).then((res) => {
+  res.text().then((xmlTxt) => {
+    var domParser = new DOMParser()
+    let doc = domParser.parseFromString(xmlTxt, 'text/xml')
+    doc.querySelectorAll('item').forEach((item) => {
+       let h1 = document.createElement('h1')
+        h1.textContent = item.querySelector('title').textContent
+         document.querySelector('main').appendChild(h1)
+       })
+     })
+});
+</script>
+</body>
+</html>
